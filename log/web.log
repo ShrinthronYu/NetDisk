@@ -1,0 +1,50 @@
+2021-12-01 11:43:34.624  INFO 17216 --- [main] com.wavebigfish.NetDiskApplication       : Starting NetDiskApplication using Java 16.0.2 on ShintronYu with PID 17216 (D:\Programming\NetDisk\target\classes started by Super_Yu in D:\Programming\NetDisk)
+2021-12-01 11:43:34.632  INFO 17216 --- [main] com.wavebigfish.NetDiskApplication       : No active profile set, falling back to default profiles: default
+2021-12-01 11:43:35.200  INFO 17216 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode!
+2021-12-01 11:43:35.202  INFO 17216 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2021-12-01 11:43:35.218  INFO 17216 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 12 ms. Found 0 JDBC repository interfaces.
+2021-12-01 11:43:35.226  INFO 17216 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode!
+2021-12-01 11:43:35.228  INFO 17216 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-12-01 11:43:35.238  INFO 17216 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 5 ms. Found 0 JPA repository interfaces.
+2021-12-01 11:43:35.699  INFO 17216 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2021-12-01 11:43:35.708  INFO 17216 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-12-01 11:43:35.708  INFO 17216 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.55]
+2021-12-01 11:43:35.838  INFO 17216 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-12-01 11:43:35.839  INFO 17216 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1156 ms
+2021-12-01 11:43:35.980  INFO 17216 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-12-01 11:43:36.029  INFO 17216 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.1.Final
+2021-12-01 11:43:36.168  INFO 17216 --- [main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-12-01 11:43:36.255  INFO 17216 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2021-12-01 11:43:36.407  INFO 17216 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2021-12-01 11:43:36.420  INFO 17216 --- [main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+2021-12-01 11:43:37.261  INFO 17216 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-12-01 11:43:37.267  INFO 17216 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-12-01 11:43:37.465 ERROR 17216 --- [main] c.b.m.core.MybatisConfiguration          : mapper[com.wavebigfish.mapper.FileMapper.insertFile] is ignored, because it exists, maybe from xml file
+2021-12-01 11:43:37.465 ERROR 17216 --- [main] c.b.m.core.MybatisConfiguration          : mapper[com.wavebigfish.mapper.FileMapper.insertFile] is ignored, because it exists, maybe from xml file
+2021-12-01 11:43:37.525 ERROR 17216 --- [main] c.b.m.core.MybatisConfiguration          : mapper[com.wavebigfish.mapper.FileMapper.insertFile] is ignored, because it exists, maybe from xml file
+2021-12-01 11:43:37.526 ERROR 17216 --- [main] c.b.m.core.MybatisConfiguration          : mapper[com.wavebigfish.mapper.FileMapper.deleteFile] is ignored, because it exists, maybe from xml file
+2021-12-01 11:43:37.527 ERROR 17216 --- [main] c.b.m.core.MybatisConfiguration          : mapper[com.wavebigfish.mapper.FileMapper.insertFile] is ignored, because it exists, maybe from xml file
+2021-12-01 11:43:37.527 ERROR 17216 --- [main] c.b.m.core.MybatisConfiguration          : mapper[com.wavebigfish.mapper.FileMapper.insertFile] is ignored, because it exists, maybe from xml file
+2021-12-01 11:43:37.528 ERROR 17216 --- [main] c.b.m.core.MybatisConfiguration          : mapper[com.wavebigfish.mapper.FileMapper.getFiles] is ignored, because it exists, maybe from xml file
+2021-12-01 11:43:37.534 ERROR 17216 --- [main] c.b.m.core.MybatisConfiguration          : mapper[com.wavebigfish.mapper.UserMapper.insertFile] is ignored, because it exists, maybe from xml file
+2021-12-01 11:43:37.593 ERROR 17216 --- [main] c.b.m.core.MybatisConfiguration          : mapper[com.wavebigfish.mapper.UserFileMapper.insertUserFile] is ignored, because it exists, maybe from xml file
+2021-12-01 11:43:37.594 ERROR 17216 --- [main] c.b.m.core.MybatisConfiguration          : mapper[com.wavebigfish.mapper.UserFileMapper.deleteUserFile] is ignored, because it exists, maybe from xml file
+2021-12-01 11:43:37.595 ERROR 17216 --- [main] c.b.m.core.MybatisConfiguration          : mapper[com.wavebigfish.mapper.UserFileMapper.updateUserFile] is ignored, because it exists, maybe from xml file
+2021-12-01 11:43:37.595 ERROR 17216 --- [main] c.b.m.core.MybatisConfiguration          : mapper[com.wavebigfish.mapper.UserFileMapper.selectUserFile] is ignored, because it exists, maybe from xml file
+2021-12-01 11:43:37.595 ERROR 17216 --- [main] c.b.m.core.MybatisConfiguration          : mapper[com.wavebigfish.mapper.UserFileMapper.getUserFiles] is ignored, because it exists, maybe from xml file
+2021-12-01 11:43:37.602 ERROR 17216 --- [main] c.b.m.core.MybatisConfiguration          : mapper[com.wavebigfish.mapper.UserMapper.insertUser] is ignored, because it exists, maybe from xml file
+2021-12-01 11:43:37.603 ERROR 17216 --- [main] c.b.m.core.MybatisConfiguration          : mapper[com.wavebigfish.mapper.UserMapper.deleteUser] is ignored, because it exists, maybe from xml file
+2021-12-01 11:43:37.603 ERROR 17216 --- [main] c.b.m.core.MybatisConfiguration          : mapper[com.wavebigfish.mapper.UserMapper.insertFile] is ignored, because it exists, maybe from xml file
+2021-12-01 11:43:37.604 ERROR 17216 --- [main] c.b.m.core.MybatisConfiguration          : mapper[com.wavebigfish.mapper.UserMapper.insertFile] is ignored, because it exists, maybe from xml file
+2021-12-01 11:43:37.604 ERROR 17216 --- [main] c.b.m.core.MybatisConfiguration          : mapper[com.wavebigfish.mapper.UserMapper.getUsers] is ignored, because it exists, maybe from xml file
+2021-12-01 11:43:37.782  WARN 17216 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2021-12-01 11:43:38.377  WARN 17216 --- [main] o.s.data.convert.CustomConversions       : Registering converter from class java.time.OffsetDateTime to class org.springframework.data.jdbc.core.convert.JdbcValue as writing converter although it doesn't convert to a store-supported type! You might want to check your annotation setup at the converter implementation.
+2021-12-01 11:43:38.465  INFO 17216 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2021-12-01 11:43:38.472  INFO 17216 --- [main] com.wavebigfish.NetDiskApplication       : Started NetDiskApplication in 4.178 seconds (JVM running for 4.602)
+2021-12-01 11:43:52.120  INFO 17216 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-12-01 11:43:52.121  INFO 17216 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2021-12-01 11:43:52.122  INFO 17216 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2021-12-01 11:43:56.909  INFO 17216 --- [http-nio-8080-exec-8] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 247 ms
+2021-12-01 11:44:53.300  INFO 17216 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2021-12-01 11:44:53.302  INFO 17216 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2021-12-01 11:44:53.309  INFO 17216 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
