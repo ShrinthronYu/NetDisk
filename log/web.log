@@ -22,3 +22,12 @@
 2021-12-03 10:19:20.124  WARN 9064 --- [main] o.s.data.convert.CustomConversions       : Registering converter from class java.time.OffsetDateTime to class org.springframework.data.jdbc.core.convert.JdbcValue as writing converter although it doesn't convert to a store-supported type! You might want to check your annotation setup at the converter implementation.
 2021-12-03 10:19:20.213  INFO 9064 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8081 (http) with context path ''
 2021-12-03 10:19:20.220  INFO 9064 --- [main] com.wavebigfish.NetDiskApplication       : Started NetDiskApplication in 3.726 seconds (JVM running for 4.154)
+2021-12-03 10:26:00.267  INFO 9064 --- [http-nio-8081-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-12-03 10:26:00.268  INFO 9064 --- [http-nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2021-12-03 10:26:00.269  INFO 9064 --- [http-nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2021-12-03 10:26:00.303 ERROR 9064 --- [http-nio-8081-exec-1] c.wavebigfish.controller.UserController  : 解码异常
+2021-12-03 10:26:00.362 ERROR 9064 --- [http-nio-8081-exec-2] c.wavebigfish.controller.UserController  : 解码异常
+2021-12-03 10:37:38.427  WARN 9064 --- [http-nio-8081-exec-3] c.b.m.c.t.support.ReflectLambdaMeta      : Unable to make field private final java.lang.Class java.lang.invoke.SerializedLambda.capturingClass accessible: module java.base does not "opens java.lang.invoke" to unnamed module @1500955a
+2021-12-03 10:37:47.996 ERROR 9064 --- [http-nio-8081-exec-8] c.wavebigfish.controller.UserController  : 解码异常
+2021-12-03 10:37:51.836 ERROR 9064 --- [http-nio-8081-exec-9] c.wavebigfish.controller.UserController  : 解码异常
+2021-12-03 10:38:05.472 ERROR 9064 --- [http-nio-8081-exec-1] c.wavebigfish.controller.UserController  : 解码异常
