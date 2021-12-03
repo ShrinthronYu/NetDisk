@@ -16,7 +16,7 @@
         where fileId = #{id}
     </delete>
 
-    <update id="insertFile" parameterType="com.wavebigfish.model.File">
+    <update id="updateFile" parameterType="com.wavebigfish.model.File">
         update file
         set timeStamp=#{timeStamp},
             fileUrl=#{fileUrl},
@@ -24,7 +24,7 @@
         where fileId = #{fileId}
     </update>
 
-    <select id="insertFile" parameterType="java.lang.Long">
+    <select id="selectFile" parameterType="java.lang.Long">
         select *
         from file
         where fileId = #{id}

@@ -67,5 +67,4 @@ public class UserFile {
     public int hashCode() {
         return getClass().hashCode();
     }
-
 }

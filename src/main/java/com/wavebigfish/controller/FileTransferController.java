@@ -66,17 +66,16 @@ public class FileTransferController {
             if (list != null && !list.isEmpty()) {
                 File file = list.get(0);
 
-                UserFile userfile = new UserFile();
-                userfile.setFileId(file.getFileId());
-                userfile.setUserId(sessionUser.getUserId());
-                userfile.setFilePath(uploadFileDto.getFilePath());
+                UserFile userFile = new UserFile();
+                userFile.setFileId(file.getFileId());
+                userFile.setUserId(sessionUser.getUserId());
+                userFile.setFilePath(uploadFileDto.getFilePath());
                 String fileName = uploadFileDto.getFilename();
-                userfile.setFileName(fileName.substring(0, fileName.lastIndexOf(".")));
-                userfile.setExtendName(FileUtil.getFileExtendName(fileName));
-                userfile.setIsDir(0);
-                userfile.setUploadTime(DateUtil.getCurrentTime());
-                userFileService.save(userfile);
-                // fileService.increaseFilePointCount(file.getFileId());
+                userFile.setFileName(fileName.substring(0, fileName.lastIndexOf(".")));
+                userFile.setExtendName(FileUtil.getFileExtendName(fileName));
+                userFile.setIsDir(0);
+                userFile.setUploadTime(DateUtil.getCurrentTime());
+                userFileService.save(userFile);
                 uploadFileVo.setSkipUpload(true);
 
             } else {
@@ -84,7 +83,6 @@ public class FileTransferController {
             }
         }
         return RestResult.success().data(uploadFileVo);
-
     }
 
     @Operation(summary = "上传文件", description = "真正的上传文件接口", tags = {"filetransfer"})
@@ -97,11 +95,9 @@ public class FileTransferController {
             return RestResult.fail().message("未登录");
         }
 
-
         fileTransferService.uploadFile(request, uploadFileDto, sessionUser.getUserId());
         UploadFileVo uploadFileVo = new UploadFileVo();
         return RestResult.success().data(uploadFileVo);
-
     }
 
     @Operation(summary = "下载文件", description = "下载文件接口", tags = {"filetransfer"})
@@ -118,9 +114,7 @@ public class FileTransferController {
         User sessionUserBean = userService.getUserByToken(token);
         EmbeddedMongoProperties.Storage storageBean = new EmbeddedMongoProperties.Storage();
 
-
         Long storageSize = fileTransferService.selectStorageSizeByUserId(sessionUserBean.getUserId());
         return RestResult.success().data(storageSize);
-
     }
 }
