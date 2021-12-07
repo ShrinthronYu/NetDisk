@@ -4,8 +4,6 @@ import {Message} from 'element-ui'
 
 // 请求超时时间
 axios.defaults.timeout = 10000 * 5
-// // 请求基础URL，对应后台服务接口地址
-// axios.defaults.baseURL = 'http://localhost:8081'
 // 请求基础URL
 axios.defaults.baseURL = '/api'
 // 自定义post请求头
@@ -15,15 +13,14 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 axios.interceptors.request.use(
     (config) => {
         //    自定义请求头
+        config.headers['token'] = Cookies.get('token')
         return config
     },
     (error) => {
-        //    请求错误时
-        console.log(error) //    打印错误信息
+        console.log(error)
         return Promise.reject(error)
     }
 )
-
 // 响应拦截器
 axios.interceptors.response.use(
     (response) => {
@@ -46,7 +43,7 @@ axios.interceptors.response.use(
                     Message.error('当前接口不存在')
                     break
                 default:
-                    this.$message.error(error.response.message) //    页面显示接口返回的错误信息
+                    Message.error(error.response.message) //    页面显示接口返回的错误信息
                     return Promise.reject(error.response)
             }
         }
@@ -132,15 +129,3 @@ export function axiosDelete(url, params = {}, info = '') {
     })
 }
 
-// 请求拦截器
-axios.interceptors.request.use(
-    (config) => {
-        //    自定义请求头
-        config.headers['token'] = Cookies.get('token')
-        return config
-    },
-    (error) => {
-        console.log(error)
-        return Promise.reject(error)
-    }
-)

@@ -12,5 +12,8 @@
         <typeAlias alias="User" type="com.wavebigfish.model.User"/>
         <typeAlias alias="File" type="com.wavebigfish.model.File"/>
         <typeAlias alias="UserFile" type="com.wavebigfish.model.UserFile"/>
+        <typeAlias alias="RecoveryFile" type="com.wavebigfish.model.RecoveryFile"/>
+        <typeAlias alias="Storage" type="com.wavebigfish.model.Storage"/>
     </typeAliases>
+    <mappers></mappers>
 </configuration>

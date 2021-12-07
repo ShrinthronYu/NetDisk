@@ -3,11 +3,13 @@ package com.wavebigfish.model;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import lombok.*;
 
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+
 import java.util.Objects;
 
 @Getter

@@ -9,14 +9,16 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.wavebigfish.common.RestResult;
 import com.wavebigfish.mapper.UserMapper;
 import com.wavebigfish.model.User;
 import com.wavebigfish.service.UserService;
-
 import com.wavebigfish.util.DateUtil;
 import com.wavebigfish.util.JWTUtil;
+
 import io.jsonwebtoken.Claims;
+
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
@@ -32,7 +34,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public RestResult<String> registerUser(User user) {
-        //判断验证码
+
         String telephone = user.getTelephone();
         String password = user.getPassword();
 
@@ -43,7 +45,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return RestResult.fail().message("手机号已存在！");
         }
 
-
         String salt = UUID.randomUUID().toString().replace("-", "").substring(15);
         String passwordAndSalt = password + salt;
         String newPassword = DigestUtils.md5DigestAsHex(passwordAndSalt.getBytes());
@@ -52,6 +53,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         user.setPassword(newPassword);
         user.setRegisterTime(DateUtil.getCurrentTime());
+
         int result = userMapper.insert(user);
 
         if (result == 1) {
@@ -65,24 +67,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         LambdaQueryWrapper<User> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(User::getTelephone, telePhone);
         List<User> list = userMapper.selectList(lambdaQueryWrapper);
-        if (list != null && !list.isEmpty()) {
-            return true;
-        } else {
-            return false;
-        }
+        return list != null && !list.isEmpty();
     }
 
     @Override
     public RestResult<User> login(User user) {
+
         String telephone = user.getTelephone();
         String password = user.getPassword();
 
         LambdaQueryWrapper<User> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(User::getTelephone, telephone);
+
         User saveUser = userMapper.selectOne(lambdaQueryWrapper);
+
         String salt = saveUser.getSalt();
         String passwordAndSalt = password + salt;
         String newPassword = DigestUtils.md5DigestAsHex(passwordAndSalt.getBytes());
+
         if (newPassword.equals(saveUser.getPassword())) {
             saveUser.setPassword("");
             saveUser.setSalt("");
@@ -92,6 +94,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
 
     }
+
     @Override
     public User getUserByToken(String token) {
         User tokenUserInfo = null;
@@ -105,7 +108,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         } catch (Exception e) {
             log.error("解码异常");
             return null;
-
         }
         return tokenUserInfo;
     }

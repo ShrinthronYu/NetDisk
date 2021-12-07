@@ -9,7 +9,7 @@ router.beforeEach((to, from, next) => {
             if (!store.getters.isLogin) { // 没有登录
                 next({
                     path: '/login',
-                    query: { Rurl: to.fullPath }
+                    query: {Rurl: to.fullPath}
                 })
             } else {
                 next()   // 正常跳转到你设置好的页面

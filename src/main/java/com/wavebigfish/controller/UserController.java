@@ -62,7 +62,7 @@ public class UserController {
         String jwt = "";
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            jwt = JWTUtil.createJWT("qiwenshare", "qiwen", objectMapper.writeValueAsString(loginResult.getData()));
+            jwt = JWTUtil.createJWT("wavebigfish", "fish", objectMapper.writeValueAsString(loginResult.getData()));
         } catch (Exception e) {
             return RestResult.fail().message("登录失败！");
         }
@@ -75,7 +75,7 @@ public class UserController {
     @GetMapping("/checkuserlogininfo")
     @ResponseBody
     public RestResult<User> checkToken(@RequestHeader("token") String token) {
-        RestResult<User> restResult = new RestResult<User>();
+        RestResult<User> restResult = new RestResult<>();
         User tokenUserInfo = null;
         try {
 
@@ -87,7 +87,6 @@ public class UserController {
         } catch (Exception e) {
             log.error("解码异常");
             return RestResult.fail().message("认证失败");
-
         }
 
         if (tokenUserInfo != null) {
@@ -95,7 +94,9 @@ public class UserController {
             return RestResult.success().data(tokenUserInfo);
 
         } else {
+
             return RestResult.fail().message("用户暂未登录");
+
         }
     }
 

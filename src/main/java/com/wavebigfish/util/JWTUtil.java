@@ -58,10 +58,8 @@ public class JWTUtil {
                 .signWith(signatureAlgorithm, key);
         // 设置过期时间
         long expTime = EXPIRE_TIME;
-        if (expTime >= 0) {
-            long exp = nowTime + expTime;
-            builder.setExpiration(new Date(exp));
-        }
+        long exp = nowTime + expTime;
+        builder.setExpiration(new Date(exp));
         builder.setAudience(audience);
         return builder.compact();
     }
@@ -70,7 +68,7 @@ public class JWTUtil {
      * 解析JWT
      *
      * @param jwt jwt串
-     * @return
+     * @return claims
      * @throws Exception
      */
     public static Claims parseJWT(String jwt) throws Exception {

@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { login } from '@/request/user.js'    //    引入登录接口
+import {login} from '@/request/user.js'    //    引入登录接口
 import Cookies from 'js-cookie'
 
 export default {
@@ -52,10 +52,10 @@ export default {
         password: ''
       },
       rules: {
-        telephone: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
+        telephone: [{required: true, message: '请输入手机号', trigger: 'blur'}],
         password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }
+          {required: true, message: '请输入密码', trigger: 'blur'},
+          {min: 8, max: 20, message: '长度在 8 到 20 个字符', trigger: 'blur'}
         ]
       }
     }
@@ -68,7 +68,10 @@ export default {
         message: '您已登录！已跳转到首页',
         type: 'success'
       })
-      this.$router.replace({ name: 'Home' })
+      this.$router.replace({
+        name: 'Home',
+        query: {fileType: 0, filePath: '/'}
+      })
     }
   },
   methods: {
@@ -82,7 +85,10 @@ export default {
               Cookies.set('token', res.data.token) //    在cookies中添加token
               this.$message.success('登录成功！')
               this.$refs[formName].resetFields() //    清空表单项
-              this.$router.replace({ name: 'Home' }) // 跳转到首页
+              this.$router.replace({
+                name: 'Home',
+                query: {fileType: 0, filePath: '/'}
+              })
             } else {
               this.$message.error('手机号或密码错误！')
             }
@@ -124,7 +130,7 @@ export default {
         margin-left: 0 !important;
       }
 
-      &>>> .el-input__inner {
+      & >>> .el-input__inner {
         font-size: 16px;
       }
 
@@ -138,7 +144,7 @@ export default {
           width: 100%;
         }
 
-        &>>> .el-button {
+        & >>> .el-button {
           padding: 10px 90px;
           font-size: 16px;
         }

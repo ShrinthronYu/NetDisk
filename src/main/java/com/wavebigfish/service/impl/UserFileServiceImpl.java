@@ -45,11 +45,10 @@ public class UserFileServiceImpl extends ServiceImpl<UserFileMapper, UserFile> i
     @Override
     public List<UserFileListVO> getUserFileByFilePath(String filePath, Long userId, Long currentPage, Long pageCount) {
         Long beginCount = (currentPage - 1) * pageCount;
-        UserFile userfile = new UserFile();
-        userfile.setUserId(userId);
-        userfile.setFilePath(filePath);
-        List<UserFileListVO> fileList = userFileMapper.userFileList(userfile, beginCount, pageCount);
-        return fileList;
+        UserFile userFile = new UserFile();
+        userFile.setUserId(userId);
+        userFile.setFilePath(filePath);
+        return userFileMapper.userFileList(userFile, beginCount, pageCount);
     }
 
     @Override
@@ -168,14 +167,14 @@ public class UserFileServiceImpl extends ServiceImpl<UserFileMapper, UserFile> i
     }
 
     @Override
-    public void updateFilepathByFilepath(String oldfilePath, String newfilePath, String fileName, String extendName, Long userId) {
+    public void updateFilepathByFilepath(String oldFilePath, String newFilePath, String fileName, String extendName, Long userId) {
         if ("null".equals(extendName)) {
             extendName = null;
         }
 
-        LambdaUpdateWrapper<UserFile> lambdaUpdateWrapper = new LambdaUpdateWrapper<UserFile>();
-        lambdaUpdateWrapper.set(UserFile::getFilePath, newfilePath)
-                .eq(UserFile::getFilePath, oldfilePath)
+        LambdaUpdateWrapper<UserFile> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+        lambdaUpdateWrapper.set(UserFile::getFilePath, newFilePath)
+                .eq(UserFile::getFilePath, oldFilePath)
                 .eq(UserFile::getFileName, fileName)
                 .eq(UserFile::getUserId, userId);
         if (StringUtils.isNotEmpty(extendName)) {
@@ -185,16 +184,16 @@ public class UserFileServiceImpl extends ServiceImpl<UserFileMapper, UserFile> i
         }
         userFileMapper.update(null, lambdaUpdateWrapper);
         //移动子目录
-        oldfilePath = oldfilePath + fileName + "/";
-        newfilePath = newfilePath + fileName + "/";
+        oldFilePath = oldFilePath + fileName + "/";
+        newFilePath = newFilePath + fileName + "/";
 
-        oldfilePath = oldfilePath.replace("\\", "\\\\\\\\");
-        oldfilePath = oldfilePath.replace("'", "\\'");
-        oldfilePath = oldfilePath.replace("%", "\\%");
-        oldfilePath = oldfilePath.replace("_", "\\_");
+        oldFilePath = oldFilePath.replace("\\", "\\\\\\\\");
+        oldFilePath = oldFilePath.replace("'", "\\'");
+        oldFilePath = oldFilePath.replace("%", "\\%");
+        oldFilePath = oldFilePath.replace("_", "\\_");
 
         if (extendName == null) { //为null说明是目录，则需要移动子目录
-            userFileMapper.updateFilepathByFilepath(oldfilePath, newfilePath, userId);
+            userFileMapper.updateFilepathByFilepath(oldFilePath, newFilePath, userId);
         }
     }
 

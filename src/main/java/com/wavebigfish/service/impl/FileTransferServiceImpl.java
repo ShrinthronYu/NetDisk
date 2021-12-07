@@ -2,6 +2,7 @@ package com.wavebigfish.service.impl;
 
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -31,7 +32,7 @@ public class FileTransferServiceImpl implements FileTransferService {
     @Resource
     FileMapper fileMapper;
     @Resource
-    UserFileMapper userfileMapper;
+    UserFileMapper userFileMapper;
 
     @Resource
     FileOperationFactory localStorageOperationFactory;
@@ -55,8 +56,8 @@ public class FileTransferServiceImpl implements FileTransferService {
         }
 
         List<UploadFile> uploadFileList = uploader.upload(request, uploadFile);
-        for (int i = 0; i < uploadFileList.size(); i++) {
-            uploadFile = uploadFileList.get(i);
+        for (UploadFile value : uploadFileList) {
+            uploadFile = value;
             File file = new File();
 
             file.setIdentifier(uploadFileDto.getIdentifier());
@@ -76,7 +77,7 @@ public class FileTransferServiceImpl implements FileTransferService {
                 userFile.setUserId(userId);
                 userFile.setIsDir(0);
                 userFile.setUploadTime(DateUtil.getCurrentTime());
-                userfileMapper.insert(userFile);
+                userFileMapper.insert(userFile);
             }
 
         }
@@ -84,14 +85,10 @@ public class FileTransferServiceImpl implements FileTransferService {
 
     @Override
     public void downloadFile(HttpServletResponse httpServletResponse, DownloadFileDTO downloadFileDTO) {
-        UserFile userFile = userfileMapper.selectById(downloadFileDTO.getUserFileId());
+        UserFile userFile = userFileMapper.selectById(downloadFileDTO.getUserFileId());
 
         String fileName = userFile.getFileName() + "." + userFile.getExtendName();
-        try {
-            fileName = new String(fileName.getBytes("utf-8"), "ISO-8859-1");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        fileName = new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
         httpServletResponse.setContentType("application/force-download");// 设置强制下载不打开
         httpServletResponse.addHeader("Content-Disposition", "attachment;fileName=" + fileName);// 设置文件名
 
@@ -109,6 +106,6 @@ public class FileTransferServiceImpl implements FileTransferService {
 
     @Override
     public Long selectStorageSizeByUserId(Long userId) {
-        return userfileMapper.selectStorageSizeByUserId(userId);
+        return userFileMapper.selectStorageSizeByUserId(userId);
     }
 }

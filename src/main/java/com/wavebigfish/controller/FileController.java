@@ -5,9 +5,10 @@ import java.util.*;
 import javax.annotation.Resource;
 
 import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+
 import com.wavebigfish.common.RestResult;
 import com.wavebigfish.dto.*;
 import com.wavebigfish.model.File;
@@ -17,9 +18,9 @@ import com.wavebigfish.service.FileService;
 import com.wavebigfish.service.UserFileService;
 import com.wavebigfish.service.UserService;
 import com.wavebigfish.util.DateUtil;
-
 import com.wavebigfish.vo.TreeNodeVO;
 import com.wavebigfish.vo.UserFileListVO;
+
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,8 +45,7 @@ public class FileController {
     @Operation(summary = "创建文件", description = "目录(文件夹)的创建", tags = {"file"})
     @PostMapping(value = "/createfile")
     @ResponseBody
-    public RestResult<String> createFile(@RequestBody CreateFileDTO createFileDto, @RequestHeader("token") String token) {
-
+    public RestResult<String> createFile(@RequestBody CreateFileDTO createFileDTO, @RequestHeader("token") String token) {
 
         User sessionUser = userService.getUserByToken(token);
         if (sessionUser == null) {
@@ -53,19 +53,18 @@ public class FileController {
         }
         LambdaQueryWrapper<UserFile> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(UserFile::getFileName, "").eq(UserFile::getFilePath, "").eq(UserFile::getUserId, 0);
-        List<UserFile> userfiles = userFileService.list(lambdaQueryWrapper);
-        if (!userfiles.isEmpty()) {
+        List<UserFile> userFiles = userFileService.list(lambdaQueryWrapper);
+        if (!userFiles.isEmpty()) {
             RestResult.fail().message("同目录下文件名重复");
         }
 
         UserFile userFile = new UserFile();
         userFile.setUserId(sessionUser.getUserId());
-        userFile.setFileName(createFileDto.getFileName());
-        userFile.setFilePath(createFileDto.getFilePath());
+        userFile.setFileName(createFileDTO.getFileName());
+        userFile.setFilePath(createFileDTO.getFilePath());
         userFile.setIsDir(1);
         userFile.setUploadTime(DateUtil.getCurrentTime());
         userFile.setDeleteFlag(0);
-        userFileService.save(userFile);
         userFileService.save(userFile);
         return RestResult.success();
     }
@@ -73,7 +72,7 @@ public class FileController {
     @Operation(summary = "获取文件列表", description = "用来做前台文件列表展示", tags = {"file"})
     @GetMapping(value = "/getfilelist")
     @ResponseBody
-    public RestResult<UserFileListVO> getUserFileList(UserFileListDTO userfileListDto,
+    public RestResult<UserFileListVO> getUserFileList(UserFileListDTO userFileListDTO,
                                                       @RequestHeader("token") String token) {
 
 
@@ -83,12 +82,18 @@ public class FileController {
 
         }
 
-        List<UserFileListVO> fileList = userFileService.getUserFileByFilePath(userfileListDto.getFilePath(),
-                sessionUser.getUserId(), userfileListDto.getCurrentPage(), userfileListDto.getPageCount());
+        List<UserFileListVO> fileList = userFileService.getUserFileByFilePath(
+                userFileListDTO.getFilePath(),
+                sessionUser.getUserId(),
+                userFileListDTO.getCurrentPage(),
+                userFileListDTO.getPageCount());
 
         LambdaQueryWrapper<UserFile> userFileLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        userFileLambdaQueryWrapper.eq(UserFile::getUserId, sessionUser.getUserId())
-                .eq(UserFile::getFilePath, userfileListDto.getFilePath()).eq(UserFile::getDeleteFlag, 0);
+        userFileLambdaQueryWrapper.eq(
+                UserFile::getUserId,
+                sessionUser.getUserId()).eq(UserFile::getFilePath,
+                userFileListDTO.getFilePath()).eq(UserFile::getDeleteFlag,
+                0);
         int total = Math.toIntExact(userFileService.count(userFileLambdaQueryWrapper));
 
         Map<String, Object> map = new HashMap<>();
@@ -105,9 +110,14 @@ public class FileController {
     public RestResult<List<Map<String, Object>>> selectFileByFileType(int fileType, Long currentPage, Long pageCount, @RequestHeader("token") String token) {
 
         User sessionUser = userService.getUserByToken(token);
+
         long userId = sessionUser.getUserId();
 
-        Map<String, Object> map = userFileService.getUserFileByType(fileType, currentPage, pageCount, userId);
+        Map<String, Object> map = userFileService.getUserFileByType(
+                fileType,
+                currentPage,
+                pageCount,
+                userId);
         return RestResult.success().data(map);
 
     }
@@ -145,7 +155,7 @@ public class FileController {
     @RequestMapping(value = "/getfiletree", method = RequestMethod.GET)
     @ResponseBody
     public RestResult<TreeNodeVO> getFileTree(@RequestHeader("token") String token) {
-        RestResult<TreeNodeVO> result = new RestResult<TreeNodeVO>();
+        RestResult<TreeNodeVO> result = new RestResult<>();
         UserFile userFile = new UserFile();
         User sessionUser = userService.getUserByToken(token);
         userFile.setUserId(sessionUser.getUserId());
@@ -154,17 +164,16 @@ public class FileController {
         TreeNodeVO resultTreeNode = new TreeNodeVO();
         resultTreeNode.setLabel("/");
 
-        for (int i = 0; i < filePathList.size(); i++) {
-            String filePath = filePathList.get(i).getFilePath() + filePathList.get(i).getFileName() + "/";
+        for (UserFile file : filePathList) {
+            String filePath = file.getFilePath() + file.getFileName() + "/";
 
             Queue<String> queue = new LinkedList<>();
 
             String[] strArr = filePath.split("/");
-            for (int j = 0; j < strArr.length; j++) {
-                if (!"".equals(strArr[j]) && strArr[j] != null) {
-                    queue.add(strArr[j]);
+            for (String s : strArr) {
+                if (!"".equals(s) && s != null) {
+                    queue.add(s);
                 }
-
             }
             if (queue.size() == 0) {
                 continue;
@@ -195,7 +204,6 @@ public class FileController {
             //插入
             TreeNodeVO resultTreeNode = new TreeNodeVO();
 
-
             resultTreeNode.setAttributes(map);
             resultTreeNode.setLabel(nodeNameQueue.poll());
             // resultTreeNode.setId(treeid++);
@@ -208,7 +216,6 @@ public class FileController {
 
         if (nodeNameQueue.size() != 0) {
             for (int i = 0; i < childrenTreeNodes.size(); i++) {
-
                 TreeNodeVO childrenTreeNode = childrenTreeNodes.get(i);
                 if (currentNodeName.equals(childrenTreeNode.getLabel())) {
                     childrenTreeNode = insertTreeNode(childrenTreeNode, filePath, nodeNameQueue);
@@ -216,29 +223,26 @@ public class FileController {
                     childrenTreeNodes.add(childrenTreeNode);
                     treeNode.setChildren(childrenTreeNodes);
                 }
-
             }
         } else {
             treeNode.setChildren(childrenTreeNodes);
         }
-
         return treeNode;
-
     }
 
     public boolean isExistPath(List<TreeNodeVO> childrenTreeNodes, String path) {
         boolean isExistPath = false;
 
         try {
-            for (int i = 0; i < childrenTreeNodes.size(); i++) {
-                if (path.equals(childrenTreeNodes.get(i).getLabel())) {
+            for (TreeNodeVO childrenTreeNode : childrenTreeNodes) {
+                if (path.equals(childrenTreeNode.getLabel())) {
                     isExistPath = true;
+                    break;
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
         return isExistPath;
     }
@@ -246,14 +250,14 @@ public class FileController {
     @Operation(summary = "文件移动", description = "可以移动文件或者目录", tags = {"file"})
     @RequestMapping(value = "/movefile", method = RequestMethod.POST)
     @ResponseBody
-    public RestResult<String> moveFile(@RequestBody MoveFileDTO moveFileDto, @RequestHeader("token") String token) {
+    public RestResult<String> moveFile(@RequestBody MoveFileDTO moveFileDTO, @RequestHeader("token") String token) {
         User sessionUser = userService.getUserByToken(token);
-        String oldfilePath = moveFileDto.getOldFilePath();
-        String newfilePath = moveFileDto.getFilePath();
-        String fileName = moveFileDto.getFileName();
-        String extendName = moveFileDto.getExtendName();
+        String oldFilePath = moveFileDTO.getOldFilePath();
+        String newFilePath = moveFileDTO.getFilePath();
+        String fileName = moveFileDTO.getFileName();
+        String extendName = moveFileDTO.getExtendName();
 
-        userFileService.updateFilepathByFilepath(oldfilePath, newfilePath, fileName, extendName, sessionUser.getUserId());
+        userFileService.updateFilepathByFilepath(oldFilePath, newFilePath, fileName, extendName, sessionUser.getUserId());
         return RestResult.success();
 
     }
@@ -261,16 +265,16 @@ public class FileController {
     @Operation(summary = "批量移动文件", description = "可以同时选择移动多个文件或者目录", tags = {"file"})
     @RequestMapping(value = "/batchmovefile", method = RequestMethod.POST)
     @ResponseBody
-    public RestResult<String> batchMoveFile(@RequestBody BatchMoveFileDTO batchMoveFileDto,
+    public RestResult<String> batchMoveFile(@RequestBody BatchMoveFileDTO batchMoveFileDTO,
                                             @RequestHeader("token") String token) {
 
         User sessionUser = userService.getUserByToken(token);
-        String files = batchMoveFileDto.getFiles();
-        String newfilePath = batchMoveFileDto.getFilePath();
+        String files = batchMoveFileDTO.getFiles();
+        String newFilePath = batchMoveFileDTO.getFilePath();
         List<UserFile> userFiles = JSON.parseArray(files, UserFile.class);
 
         for (UserFile userFile : userFiles) {
-            userFileService.updateFilepathByFilepath(userFile.getFilePath(), newfilePath, userFile.getFileName(),
+            userFileService.updateFilepathByFilepath(userFile.getFilePath(), newFilePath, userFile.getFileName(),
                     userFile.getExtendName(), sessionUser.getUserId());
         }
 
@@ -281,32 +285,31 @@ public class FileController {
     @Operation(summary = "文件重命名", description = "文件重命名", tags = {"file"})
     @RequestMapping(value = "/renamefile", method = RequestMethod.POST)
     @ResponseBody
-    public RestResult<String> renameFile(@RequestBody RenameFileDTO renameFileDto, @RequestHeader("token") String token) {
+    public RestResult<String> renameFile(@RequestBody RenameFileDTO renameFileDTO, @RequestHeader("token") String token) {
         User sessionUser = userService.getUserByToken(token);
-        UserFile userFile = userFileService.getById(renameFileDto.getUserFileId());
+        UserFile userFile = userFileService.getById(renameFileDTO.getUserFileId());
 
-        List<UserFile> userFiles = userFileService.selectUserFileByNameAndPath(renameFileDto.getFileName(), userFile.getFilePath(), sessionUser.getUserId());
+        List<UserFile> userFiles = userFileService.selectUserFileByNameAndPath(renameFileDTO.getFileName(), userFile.getFilePath(), sessionUser.getUserId());
         if (userFiles != null && !userFiles.isEmpty()) {
             return RestResult.fail().message("同名文件已存在");
 
         }
         if (1 == userFile.getIsDir()) {
             LambdaUpdateWrapper<UserFile> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
-            lambdaUpdateWrapper.set(UserFile::getFileName, renameFileDto.getFileName())
+            lambdaUpdateWrapper.set(UserFile::getFileName, renameFileDTO.getFileName())
                     .set(UserFile::getUploadTime, DateUtil.getCurrentTime())
-                    .eq(UserFile::getUserFileId, renameFileDto.getUserFileId());
+                    .eq(UserFile::getUserFileId, renameFileDTO.getUserFileId());
             userFileService.update(lambdaUpdateWrapper);
-            userFileService.replaceUserFilePath(userFile.getFilePath() + renameFileDto.getFileName() + "/",
+            userFileService.replaceUserFilePath(userFile.getFilePath() + renameFileDTO.getFileName() + "/",
                     userFile.getFilePath() + userFile.getFileName() + "/", sessionUser.getUserId());
         } else {
             File file = fileService.getById(userFile.getFileId());
 
             LambdaUpdateWrapper<UserFile> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
-            lambdaUpdateWrapper.set(UserFile::getFileName, renameFileDto.getFileName())
+            lambdaUpdateWrapper.set(UserFile::getFileName, renameFileDTO.getFileName())
                     .set(UserFile::getUploadTime, DateUtil.getCurrentTime())
-                    .eq(UserFile::getUserFileId, renameFileDto.getUserFileId());
+                    .eq(UserFile::getUserFileId, renameFileDTO.getUserFileId());
             userFileService.update(lambdaUpdateWrapper);
-
 
         }
 

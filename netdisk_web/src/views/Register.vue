@@ -10,10 +10,10 @@
           class="demo-ruleForm"
           hide-required-asterisk
       >
-        <el-form-item prop="username">
+        <el-form-item prop="userName">
           <el-input
               prefix-icon="el-icon-user"
-              v-model="ruleForm.username"
+              v-model="ruleForm.userName"
               placeholder="用户名"
           ></el-input>
         </el-form-item>
@@ -54,20 +54,20 @@ export default {
   data() {
     return {
       ruleForm: {
-        username: '',
+        userName: '',
         telephone: '',
         password: '',
       },
       rules: {
-        username: [
+        userName: [
           {required: true, message: "请输入用户名", trigger: "blur"},
         ],
         password: [
           {required: true, message: "请输入密码", trigger: "blur"},
           {
-            min: 5,
+            min: 8,
             max: 20,
-            message: "长度在 5 到 20 个字符",
+            message: "长度在 8 到 20 个字符",
             trigger: "blur",
           },
         ],
@@ -86,7 +86,10 @@ export default {
         message: '您已登录！已跳转到首页',
         type: 'success'
       })
-      this.$router.replace({name: 'Home'})
+      this.$router.replace({
+        name: 'Home',
+        query: {fileType: 0, filePath: '/'}
+      })
     }
   },
   methods: {

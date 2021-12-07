@@ -5,7 +5,7 @@
       :router="true"
       mode="horizontal"
   >
-    <el-menu-item index="Home" :route="{ name: 'Home' }">首页</el-menu-item>
+    <el-menu-item index="Home" :route="{ name: 'Home', query: { fileType: 0, filePath: '/' } }">首页</el-menu-item>
     <el-menu-item
         class="login"
         index="Login"
@@ -29,7 +29,7 @@
     <!-- 为了和其他菜单样式保持一致，请一定要添加类名 el-menu-item -->
     <div class="el-menu-item username" v-show="isLogin">
       <!-- 图标来自于Element UI官方图标库 -->
-      <i class="el-icon-user-solid"></i>{{ username }}
+      <i class="el-icon-user-solid"></i>{{ userName }}
     </div>
   </el-menu>
 </template>
@@ -52,8 +52,8 @@ export default {
       return this.$store.getters.isLogin
     },
     // 用户名
-    username() {
-      return this.$store.getters.username
+    userName() {
+      return this.$store.getters.userName
     }
   },
   methods: {

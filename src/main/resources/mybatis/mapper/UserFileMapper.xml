@@ -5,59 +5,24 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.wavebigfish.mapper.UserFileMapper">
-    <insert id="insertUserFile" parameterType="com.wavebigfish.model.UserFile">
-        insert into userfile (userFileId, userId, fileId, fileName, filePath, extendName, isDir, uploadTime)
-            value (#{userFileId}, #{userId}, #{fileId}, #{fileName}, #{filePath}, #{extendName}, #{isDir}, #{uploadTime})
-    </insert>
-
-    <delete id="deleteUserFile" parameterType="java.lang.Long">
-        delete
-        from userfile
-        where userFileId = #{id}
-    </delete>
-
-    <update id="updateUserFile" parameterType="com.wavebigfish.model.UserFile">
-        update user
-        set userId=#{userId},
-            fileId=#{fileId},
-            fileName=#{fileName},
-            filePath=#{filePath},
-            extendName=#{extendName},
-            isDir=#{isDir},
-            uploadTime=#{uploadTime}
-        where userFileId = #{userFileId}
-    </update>
-
-    <select id="selectUserFile" parameterType="java.lang.Long">
-        select *
-        from userfile
-        where userFileId = #{id}
-    </select>
-
-    <select id="getUserFiles" resultType="com.wavebigfish.model.UserFile">
-        select *
-        from userfile
-    </select>
-
     <select id="userFileList" resultType="com.wavebigfish.vo.UserFileListVO">
         select * from userfile a
         left join file on file.fileId = a.fileId
         <where>
             <if test="userFile.userId != null">
-                and a.userId = #{userfile.userId}
+                and a.userId = #{userFile.userId}
             </if>
             <if test="userFile.filePath != null">
-                and a.filePath = #{userfile.filePath}
+                and a.filePath = #{userFile.filePath}
             </if>
             <if test="userFile.extendName != null">
-                and a.extendName = #{userfile.extendName}
+                and a.extendName = #{userFile.extendName}
             </if>
             and a.deleteFlag = 0
         </where>
         ORDER BY isDir desc
         limit #{beginCount}, #{pageCount}
     </select>
-
     <sql id="selectByExtendName">
         left join file on file.fileId = userfile.fileId
         where extendName in
@@ -79,26 +44,23 @@
     <select id="selectFileByExtendName" parameterType="com.wavebigfish.model.UserFile"
             resultType="com.wavebigfish.vo.UserFileListVO">
         select * from userfile
-        <include refid="selectByExtendName"></include>
+        <include refid="selectByExtendName"/>
         limit #{beginCount}, #{pageCount}
     </select>
-
     <select id="selectCountByExtendName" parameterType="com.wavebigfish.model.UserFile" resultType="java.lang.Long">
         select count(*) from userfile
-        <include refid="selectByExtendName"></include>
+        <include refid="selectByExtendName"/>
     </select>
-
     <select id="selectFileNotInExtendNames" parameterType="com.wavebigfish.model.UserFile"
             resultType="com.wavebigfish.vo.UserFileListVO">
         select * from userfile
-        <include refid="selectByNotExtendName"></include>
+        <include refid="selectByNotExtendName"/>
         limit #{beginCount}, #{pageCount}
     </select>
-
     <select id="selectCountNotInExtendNames" parameterType="com.wavebigfish.model.UserFile"
             resultType="java.lang.Long">
         select count(*) from userfile
-        <include refid="selectByNotExtendName"></include>
+        <include refid="selectByNotExtendName"/>
     </select>
     <update id="updateFilepathByFilepath">
         UPDATE userfile

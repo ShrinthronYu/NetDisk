@@ -1,6 +1,7 @@
 package com.wavebigfish.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+
 import lombok.Data;
 
 @Data
@@ -16,9 +17,8 @@ public class UploadFileDTO {
     @Schema(description = "扩展名")
     private String extendName;
 
-
     @Schema(description = "文件名")
-    private String filename;
+    private String fileName;
 
     @Schema(description = "文件大小")
     private Long fileSize;
@@ -31,10 +31,13 @@ public class UploadFileDTO {
 
     @Schema(description = "所有切片")
     private int totalChunks;
+
     @Schema(description = "总大小")
     private long totalSize;
+
     @Schema(description = "当前切片大小")
     private long currentChunkSize;
+
     @Schema(description = "md5码")
     private String identifier;
 
