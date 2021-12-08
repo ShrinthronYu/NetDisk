@@ -9,8 +9,14 @@
         <OperationMenu
             :fileType="fileType"
             :filePath="filePath"
+            :operationFileList="operationFileList"
             @getTableData="getFileData"
+            @handleUploadFile="handleUploadFile"
+            @handleSelectFile="setOperationFile"
+            @handleMoveFile="setMoveFileDialog"
         ></OperationMenu>
+        <!-- 3. 使用查看模式切换组件 将 fileType 传递给子组件 -->
+        <ShowModel :fileType="fileType"></ShowModel>
         <SelectColumn></SelectColumn>
       </div>
       <!-- 面包屑导航栏 - 显示文件路径 -->
@@ -19,14 +25,35 @@
       <FileTable
           :tableData="tableData"
           :loading="loading"
+          :fileType="fileType"
+          @getTableData="getFileData"
+          @handleSelectFile="setOperationFile"
+          @handleMoveFile="setMoveFileDialog"
       ></FileTable>
+      <!-- 网格模式 v-if 当左侧菜单选择图片且查看模式为"网格"时显示 -->
+      <FileGrid
+          v-if="fileType === 1 && showModel === 1"
+          :tableData="tableData"
+          :loading="loading"
+      ></FileGrid>
       <!-- 分页组件 - 文件分页 -->
       <FilePagination
           :pageData="pageData"
           @changePageData="changePageData"
       ></FilePagination>
       <!-- 表格组件 - 文件展示区 -->
+      <!-- 文件上传组件 -->
+      <FileUploader ref="globalUploader" @getTableData="getFileData"></FileUploader>
     </div>
+    <!-- 3. 使用移动文件模态框 -->
+    <MoveFileDialog
+        :dialogMoveFile="dialogMoveFile"
+        @setSelectFilePath="setSelectFilePath"
+        @confirmMoveFile="confirmMoveFile"
+        @handleMoveFile="setMoveFileDialog"
+    ></MoveFileDialog>
+    <!-- 3. 使用图片在线查看组件 -->
+    <ImgReview></ImgReview>
   </div>
 </template>
 
@@ -36,11 +63,19 @@ import BreadCrumb from './components/BreadCrumb.vue' //  引入面包屑导航�
 import FileTable from './components/FileTable.vue' //  引入文件表格展示区
 import FilePagination from './components/FilePagination.vue' //  引入分页组件
 import SelectColumn from './components/SelectColumn.vue' //  引入控制列显隐组件
-import OperationMenu from './components/OperationMenu.vue' //  1.引入文件上传组件
+import OperationMenu from './components/OperationMenu.vue' // 引入文件上传组件
+import FileUploader from './components/FileUploader.vue' //  引入文件上传组件
+import MoveFileDialog from './components/MoveFileDialog' //  引入移动文件组件
+import ShowModel from './components/ShowModel.vue' //  引入查看模式切换组件
+import FileGrid from './components/FileGrid.vue' //  1. 引入网格组件
+import ImgReview from '@/components/ImgReview' //  1. 引入图片在线查看组件
 import {
   getFileListByPath,
   getFileListByType,
-  getFileStorage
+  getFileStorage,
+  batchMoveFile,
+  getFileTree,
+  moveFile
 } from '@/request/file.js' //  引入获取文件列表接口
 
 export default {
@@ -51,7 +86,12 @@ export default {
     FileTable,
     FilePagination,
     SelectColumn,
-    OperationMenu
+    OperationMenu,
+    FileUploader,
+    MoveFileDialog,
+    ShowModel,
+    FileGrid,
+    ImgReview
   },
   data() {
     return {
@@ -62,7 +102,15 @@ export default {
         currentPage: 1, //   页码
         pageCount: 20, //  每页显示条目个数
         total: 0 //  总数
-      }
+      },
+      //  移动文件模态框数据
+      dialogMoveFile: {
+        visible: false, //  对话框是否显示
+        fileTree: [] //  目录树
+      },
+      isBatch: false, //  是否批量移动
+      operationFile: {}, // 单个操作的文件信息
+      operationFileList: [] // 批量操作的文件信息
     }
   },
   computed: {
@@ -73,6 +121,10 @@ export default {
     // 当前所在路径
     filePath() {
       return this.$route.query.filePath ? this.$route.query.filePath : '/'
+    },
+    // 查看模式
+    showModel() {
+      return this.$store.getters.showModel
     }
   },
   watch: {
@@ -107,7 +159,7 @@ export default {
     getStorageValue() {
       getFileStorage().then((res) => {
         if (res.success) {
-          this.storageValue = res.data ?  Number(res.data.storageSize) : 0
+          this.storageValue = res.data ? res.data : 0
         } else {
           this.$message.error(res.message)
         }
@@ -162,6 +214,82 @@ export default {
       this.pageData.currentPage = pageData.currentPage // 页码赋值
       this.pageData.pageCount = pageData.pageCount //  每页条目数赋值
       this.getFileData() // 获取文件列表
+    },
+    // 上传文件 按钮点击事件
+    handleUploadFile() {
+      //  触发子组件中的打开文件上传窗口事件
+      this.$refs.globalUploader.triggerSelectFileClick()
+    },
+    /**
+     * 设置移动文件时的文件信息
+     * @param {Boolean} isBatch 是否批量移动，true 是批量移动，false 是单个文件操作
+     * @param {Object | Array} file 需要移动的文件信息，单个操作时为Oject，批量操作时，为Array
+     */
+    setOperationFile(isBatch, file) {
+      this.isBatch = isBatch //  保存操作类型
+      if (isBatch) {
+        this.operationFileList = file //  批量操作文件
+      } else {
+        this.operationFile = file //  单个操作文件
+      }
+    },
+    /**
+     * 设置移动文件对话框相关数据
+     * @param {Boolean} visible 打开/关闭移动文件模态框
+     */
+    setMoveFileDialog(visible) {
+      this.dialogMoveFile.visible = visible //  打开对话框
+      if (visible) {
+        // 打开对话框时，获取文件夹目录树
+        getFileTree().then((res) => {
+          if (res.success) {
+            this.dialogMoveFile.fileTree = [res.data]
+          } else {
+            this.$message.error(res.message)
+          }
+        })
+      }
+    },
+    //  设置移动文件的目标路径
+    setSelectFilePath(selectFilePath) {
+      this.selectFilePath = selectFilePath
+    },
+    //  移动文件模态框-确定按钮事件
+    confirmMoveFile() {
+      if (this.isBatch) {
+        //  批量移动
+        let data = {
+          filePath: this.selectFilePath,
+          files: JSON.stringify(this.operationFileList)
+        }
+        batchMoveFile(data).then((res) => {
+          if (res.success) {
+            this.$message.success(res.data)
+            this.getFileData() //  刷新文件列表
+            this.dialogMoveFile.visible = false //  关闭对话框
+            this.operationFileList = []
+          } else {
+            this.$message.error(res.message)
+          }
+        })
+      } else {
+        //  单文件移动
+        let data = {
+          filePath: this.selectFilePath, //  目标路径
+          oldFilePath: this.operationFile.filePath, //  原路径
+          fileName: this.operationFile.fileName, //  文件名称
+          extendName: this.operationFile.extendName //  文件扩展名
+        }
+        moveFile(data).then((res) => {
+          if (res.success) {
+            this.$message.success('移动文件成功')
+            this.getFileData() //  刷新文件列表
+            this.dialogMoveFile.visible = false //  关闭对话框
+          } else {
+            this.$message.error(res.message)
+          }
+        })
+      }
     }
   }
 }
@@ -177,7 +305,7 @@ export default {
 
   .home-right {
     box-sizing: border-box;
-    width: calc(100% - 200px);
+    width: calc(100% - 400px);
     padding: 8px 24px;
     flex: 1;
 
@@ -186,6 +314,11 @@ export default {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      // 左侧菜单按钮组 样式调整
+
+      >>> .operation-menu-wrapper {
+        flex: 1;
+      }
     }
   }
 

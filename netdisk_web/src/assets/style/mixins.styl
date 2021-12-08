@@ -14,3 +14,12 @@ setScrollbar(scrollbarWidth, trackColor = #EBEEF5, thumbColor = #909399)
     -webkit-border-radius 2em
     -moz-border-radius 2em
     border-radius 2em
+
+// 文字过长显示省略号
+setEllipsis(line)
+  display: -webkit-box;
+  overflow: hidden;
+  white-space: wrap;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: line;

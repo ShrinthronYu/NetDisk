@@ -9,11 +9,11 @@
         <typeAlias alias="LinkedHashMap" type="java.util.LinkedHashMap"/>
         <typeAlias alias="ArrayList" type="java.util.ArrayList"/>
         <typeAlias alias="LinkedList" type="java.util.LinkedList"/>
-        <typeAlias alias="User" type="com.wavebigfish.model.User"/>
-        <typeAlias alias="File" type="com.wavebigfish.model.File"/>
-        <typeAlias alias="UserFile" type="com.wavebigfish.model.UserFile"/>
-        <typeAlias alias="RecoveryFile" type="com.wavebigfish.model.RecoveryFile"/>
-        <typeAlias alias="Storage" type="com.wavebigfish.model.Storage"/>
+        <typeAlias alias="User" type="com.boshfish.model.User"/>
+        <typeAlias alias="File" type="com.boshfish.model.File"/>
+        <typeAlias alias="UserFile" type="com.boshfish.model.UserFile"/>
+        <typeAlias alias="RecoveryFile" type="com.boshfish.model.RecoveryFile"/>
+        <typeAlias alias="Storage" type="com.boshfish.model.Storage"/>
     </typeAliases>
     <mappers></mappers>
 </configuration>

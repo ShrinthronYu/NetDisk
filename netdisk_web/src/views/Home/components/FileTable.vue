@@ -22,7 +22,11 @@
         <img :src="setFileImg(scope.row)" style="width: 30px"/>
       </template>
     </el-table-column>
-    <el-table-column prop="fileName" label="文件名">
+    <!-- 通过 v-if 来控制 文件名 列是否显示 -->
+    <el-table-column
+        prop="fileName"
+        label="文件名"
+    >
       <template slot-scope="scope">
         <div style="cursor: pointer" @click="handleFileNameClick(scope.row)">
           {{
@@ -30,6 +34,26 @@
                 ? `${scope.row.fileName}.${scope.row.extendName}`
                 : `${scope.row.fileName}`
           }}
+        </div>
+      </template>
+    </el-table-column>
+    <el-table-column
+        label="所在路径"
+        prop="filePath"
+        show-overflow-tooltip
+        v-if="fileType !== 0"
+    >
+      <template slot-scope="scope">
+        <div
+            style="cursor: pointer"
+            title="点击跳转"
+            @click="
+            $router.push({
+              query: { fileType: 0, filePath: scope.row.filePath }
+            })
+          "
+        >
+          {{ scope.row.filePath }}
         </div>
       </template>
     </el-table-column>
@@ -107,8 +131,13 @@
           >重命名
           </el-button
           >
-          <el-button type="text" size="small">
-            <a target="_blank" style="display: block; color: inherit">下载</a>
+          <el-button type="text" size="small" v-if="scope.row.isDir === 0">
+            <a
+                :href="`/api/filetransfer/downloadfile?userFileId=${scope.row.userFileId}`"
+                target="_blank"
+                style="display: block; color: inherit"
+            >下载</a
+            >
           </el-button>
         </div>
         <!-- 操作列收缩状态下的按钮 -->
@@ -130,11 +159,13 @@
             >重命名
             </el-dropdown-item
             >
-            <el-dropdown-item>
+            <el-dropdown-item v-if="scope.row.isDir === 0">
               <a
+                  :href="`/api/filetransfer/downloadfile?userFileId=${scope.row.userFileId}`"
                   target="_blank"
                   style="display: block; color: inherit"
-              >下载</a>
+              >下载</a
+              >
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -144,7 +175,10 @@
 </template>
 
 <script>
-import {deleteFile, renameFile} from '@/request/file.js' //  引入接口
+import {
+  deleteFile,
+  renameFile
+} from '@/request/file.js' //  引入接口
 
 export default {
   name: 'FileTable',

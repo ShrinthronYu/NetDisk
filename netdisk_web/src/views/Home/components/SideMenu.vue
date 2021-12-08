@@ -199,7 +199,7 @@ export default {
   // 对展开状态下的菜单设置宽度
 
   .side-menu:not(.el-menu--collapse) {
-    width: 200px;
+    width: 400px;
   }
 }
 </style>
